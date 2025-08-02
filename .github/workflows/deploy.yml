@@ -23,6 +23,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Terraform Init (ECR only)
+        working-directory: ./infra
+        run: terraform init
+
+      - name: Terraform Apply (ECR only)
+        working-directory: ./infra
+        run: terraform apply -auto-approve -target=aws_ecr_repository.api -var-file=environments/dev.vars
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
