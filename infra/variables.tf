@@ -30,3 +30,9 @@ variable "container_port" {
   type        = number
   default     = 8080
 }
+
+variable "ecr_repository_name" {
+  description = "Nome do repositório ECR"
+  type        = string
+  default     = "hello-api"
+}

@@ -2,35 +2,37 @@ resource "aws_ecs_cluster" "main" {
   name = "${var.environment}-ecs-cluster"
 }
 
-resource "aws_ecs_task_definition" "main" {
-  family                   = "${var.environment}-ecs-task"
+resource "aws_ecs_task_definition" "api" {
+  family                   = "hello-api"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = "256"
   memory                   = "512"
+  execution_role_arn       = aws_iam_role.ecs_task_execution_role.arn
 
   container_definitions = jsonencode([
     {
-      name      = "app"
-      image     = "nginx"
-      cpu       = 256
-      memory    = 512
-      essential = true
+      name      = "hello-api"
+      image     = "${aws_ecr_repository.api.repository_url}:latest"
       portMappings = [
         {
           containerPort = var.container_port
           hostPort      = var.container_port
-          protocol      = "tcp"
         }
       ]
     }
   ])
+
+    depends_on = [
+    aws_ecr_repository.api,
+    aws_iam_role.ecs_task_execution_role
+  ]
 }
 
 resource "aws_ecs_service" "main" {
   name            = "${var.environment}-ecs-service"
   cluster         = aws_ecs_cluster.main.id
-  task_definition = aws_ecs_task_definition.main.arn
+  task_definition = aws_ecs_task_definition.api.arn
   launch_type     = "FARGATE"
 
   network_configuration {
@@ -40,7 +42,7 @@ resource "aws_ecs_service" "main" {
 
   load_balancer {
     target_group_arn = aws_alb_target_group.main.arn
-    container_name   = "app"
+    container_name   = "hello-api"
     container_port   = var.container_port
   }
 
