@@ -23,6 +23,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
       - name: Terraform Init (ECR only)
         working-directory: ./infra
         run: terraform init
@@ -50,9 +53,6 @@ jobs:
       - name: Push Docker image to ECR
         run: |
           docker push ${{ steps.login-ecr.outputs.registry }}/${ECR_REPOSITORY}:latest
-
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
         working-directory: ./infra
