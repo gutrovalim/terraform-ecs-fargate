@@ -20,3 +20,5 @@ terraform-ecs-fargate/
 
 
 Teste de github
+
+Teste de release 1
