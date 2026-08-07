@@ -17,3 +17,10 @@ terraform-ecs-fargate/
 ├── [outputs.tf](http://_vscodecontentref_/2)             # Definição de saídas globais
 ├── [provider.tf](http://_vscodecontentref_/3)            # Configuração do provedor AWS
 ├── .gitignore             # Arquivos ignorados pelo Git
+
+
+Teste de github
+
+Teste de release 1
+
+Teste de release 2
